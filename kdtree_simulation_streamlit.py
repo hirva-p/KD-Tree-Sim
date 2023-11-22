@@ -36,6 +36,9 @@ if algo =="KD Tree":
     if "nn" not in st.session_state:
         st.session_state.nn = []
 
+    if "rand_check" not in st.session_state:
+        st.session_state.rand_check = False
+
     with st.form("my_form_n"):
         numofinp = st.text_input("Add the number of inputs", key="n")
         subm_x = st.form_submit_button("Submit")
@@ -56,17 +59,39 @@ if algo =="KD Tree":
 
 
 
-    if (st.session_state["cnt"]<l):
-        x,y = show_form(st.session_state["cnt"])
-        while (x is None):
-            pass
-        st.session_state.input_nums_x.append(x)
-        st.session_state.input_nums_y.append(y)
-        st.session_state["cnt"]= st.session_state["cnt"]+1
-        st.session_state.rerun = True
-        if (st.session_state.rerun==True):
-            st.session_state.rerun = False
-            st.experimental_rerun()
+    input_opt = st.selectbox("How do you wish to input data?",("Manually", "Random points"))
+    
+    if input_opt=="Manually":
+        if (st.session_state["cnt"]<l):
+            x,y = show_form(st.session_state["cnt"])
+            while (x is None):
+                pass
+            st.session_state.input_nums_x.append(x)
+            st.session_state.input_nums_y.append(y)
+            st.session_state["cnt"]= st.session_state["cnt"]+1
+            st.session_state.rerun = True
+            if (st.session_state.rerun==True):
+                st.session_state.rerun = False
+                st.experimental_rerun()
+
+        if (st.session_state.inp_num_check ==True and len(st.session_state.input_nums_y)==l):
+            for i in range(0,len(st.session_state.input_nums_x)):
+                x = int(st.session_state.input_nums_x[i])
+                y = int(st.session_state.input_nums_y[i])
+                st.session_state.input_num.append([x,y])
+            st.session_state.inp_num_check = False
+    elif input_opt == "Random points":
+        if st.session_state.rand_check==False:
+            for i in range(l):
+                x = rd.randint(0,100)
+                y = rd.randint(0,100)
+                st.session_state.input_nums_x.append(x)
+                st.session_state.input_nums_y.append(y)
+            for i in range(0,len(st.session_state.input_nums_x)):
+                x = int(st.session_state.input_nums_x[i])
+                y = int(st.session_state.input_nums_y[i])
+                st.session_state.input_num.append([x,y])
+            st.session_state.rand_check = True
 
     # st.markdown(st.session_state.input_nums_x)
     # st.markdown(st.session_state.input_nums_y)
@@ -248,13 +273,7 @@ if algo =="KD Tree":
     dimn = ['x','y']
     height = len(positions)
 
-    if (st.session_state.inp_num_check ==True and len(st.session_state.input_nums_y)==l):
-        for i in range(0,len(st.session_state.input_nums_x)):
-            x = int(st.session_state.input_nums_x[i])
-            y = int(st.session_state.input_nums_y[i])
-            st.session_state.input_num.append([x,y])
-        
-        st.session_state.inp_num_check = False
+    
 
     ip = np.array(st.session_state.input_num)
     kd = KDTree4(ip)
@@ -564,6 +583,9 @@ elif algo=="LSH":
     if "rand_num" not in st.session_state:
         st.session_state["rand_num"] = 0
 
+    if "rand_check" not in st.session_state:
+        st.session_state["rand_check"] = False
+
     with st.form("rand_nums"):
         st.session_state["rand_num"] = int(st.number_input("Pick a random number"))
         subm_n = st.form_submit_button("Submit")
@@ -591,19 +613,32 @@ elif algo=="LSH":
         else :
             st.markdown("submit")
 
+    input_opt = st.selectbox("How do you wish to input data?",("Manually", "Random points"))
 
-
-    if (st.session_state["cnt"]<l):
-        x,y = show_form(st.session_state["cnt"])
-        while (x is None):
-            pass
-        st.session_state.input_nums_x.append(x)
-        st.session_state.input_nums_y.append(y)
-        st.session_state["cnt"]= st.session_state["cnt"]+1
-        st.session_state.rerun = True
-        if (st.session_state.rerun==True):
-            st.session_state.rerun = False
-            st.experimental_rerun()
+    if input_opt=="Manually":
+        if (st.session_state["cnt"]<l):
+            x,y = show_form(st.session_state["cnt"])
+            while (x is None):
+                pass
+            st.session_state.input_nums_x.append(x)
+            st.session_state.input_nums_y.append(y)
+            st.session_state["cnt"]= st.session_state["cnt"]+1
+            st.session_state.rerun = True
+            if (st.session_state.rerun==True):
+                st.session_state.rerun = False
+                st.experimental_rerun()
+    elif input_opt == "Random points":
+        if st.session_state.rand_check==False:
+            for i in range(l):
+                x = rd.randint(0,100)
+                y = rd.randint(0,100)
+                st.session_state.input_nums_x.append(x)
+                st.session_state.input_nums_y.append(y)
+            for i in range(0,len(st.session_state.input_nums_x)):
+                x = int(st.session_state.input_nums_x[i])
+                y = int(st.session_state.input_nums_y[i])
+                st.session_state.input_num.append([x,y])
+            st.session_state.rand_check = True
 
     # st.markdown(st.session_state.input_nums_x)
     # st.markdown(st.session_state.input_nums_y)
@@ -615,13 +650,13 @@ elif algo=="LSH":
     q = q.split()
     qq = [int(q[0]),int(q[1])]
     st.write("Query point is: "+str(qq))
-    if (st.session_state.inp_num_check ==True and len(st.session_state.input_nums_y)==l):
-        for i in range(0,len(st.session_state.input_nums_x)):
-            x = int(st.session_state.input_nums_x[i])
-            y = int(st.session_state.input_nums_y[i])
-            st.session_state.input_num.append([x,y])
+    # if (st.session_state.inp_num_check ==True and len(st.session_state.input_nums_y)==l):
+    #     for i in range(0,len(st.session_state.input_nums_x)):
+    #         x = int(st.session_state.input_nums_x[i])
+    #         y = int(st.session_state.input_nums_y[i])
+    #         st.session_state.input_num.append([x,y])
         
-        st.session_state.inp_num_check = False
+        # st.session_state.inp_num_check = False
     ip = np.array(st.session_state.input_num)
     st.write("Input Numbers are: "+str(st.session_state.input_num))
     # plt.scatter(st.session_state.input_nums_x,st.session_state.input_nums_y)
@@ -656,18 +691,18 @@ elif algo=="LSH":
         rd.seed(sed)
         fpx = rd.randint(lowx,highx)
         fpy = rd.randint(lowy,highy)
-        spx = rd.randint(1,7)
-        spy = rd.randint(1,7)
+        spx = rd.randint(lowx,highx)
+        spy = rd.randint(lowy,highy)
         ax.axline((fpx,fpy),(spx,spy),color='grey')
         ffpx = rd.randint(lowx,highx)
         ffpy = rd.randint(lowy,highy)
-        sspx = rd.randint(1,7)
-        sspy = rd.randint(1,7)
+        sspx = rd.randint(lowx,highx)
+        sspy = rd.randint(lowy,highy)
         st.write(ffpx,ffpy,sspx,sspy)
         fffpx = rd.randint(lowx,highx)
         fffpy = rd.randint(lowy,highy)
-        ssspx = rd.randint(1,7)
-        ssspy = rd.randint(1,7)
+        ssspx = rd.randint(lowx,highx)
+        ssspy = rd.randint(lowy,highy)
         st.write(fffpx,fffpy,ssspx,ssspy)
         ax.axline((ffpx,ffpy),(sspx,sspy),color='green')
         ax.axline((fffpx,fffpy),(ssspx,ssspy),color='y')
@@ -753,31 +788,31 @@ elif algo=="LSH":
         for i in range(len(outlst)):
             if (i==0):
                 for j in range(len(outlst[i])):
-                    poss[str(outlst[i][j])] = [50,-60-(50*(j+1))]
+                    poss[str(outlst[i][j])] = [30,-60-(50*(j+1))]
             elif (i==1):
                 for j in range(len(outlst[i])):
                     # st.write(outlst[i][0])
-                    poss[str(outlst[i][j])] = [150,-60-(50*(j+1))]
+                    poss[str(outlst[i][j])] = [170,-60-(50*(j+1))]
             elif (i==2):
                 for j in range(len(outlst[i])):
                     # st.write(outlst[i][0])
-                    poss[str(outlst[i][j])] = [350,-60-(50*(j+1))]
+                    poss[str(outlst[i][j])] = [330,-60-(50*(j+1))]
             elif (i==3):
                 for j in range(len(outlst[i])):
                     # st.write(outlst[i][0])
-                    poss[str(outlst[i][j])] = [450,-60-(50*(j+1))]
+                    poss[str(outlst[i][j])] = [470,-60-(50*(j+1))]
             elif (i==4):
                 for j in range(len(outlst[i])):
-                    poss[str(outlst[i][j])] = [550,-60-(50*(j+1))]
+                    poss[str(outlst[i][j])] = [530,-60-(50*(j+1))]
             elif (i==5):
                 for j in range(len(outlst[i])):
-                    poss[str(outlst[i][j])] = [650,-60-(50*(j+1))]
+                    poss[str(outlst[i][j])] = [670,-60-(50*(j+1))]
             elif (i==6):
                 for j in range(len(outlst[i])):
-                    poss[str(outlst[i][j])] = [850,-60-(50*(j+1))] 
+                    poss[str(outlst[i][j])] = [830,-60-(50*(j+1))] 
             elif (i==7):
                 for j in range(len(outlst[i])):
-                    poss[str(outlst[i][j])] = [950,-60-(50*(j+1))] 
+                    poss[str(outlst[i][j])] = [970,-60-(50*(j+1))] 
 
         if st.session_state["cnt2"]>=0 and st.session_state["cnt2"]<3*len(st.session_state.input_num):
             execnum = int(st.session_state["cnt2"]%3)
@@ -899,14 +934,14 @@ elif algo=="LSH":
         poss[5] = [400,100]
         poss[6] = [600,100]
         poss[7] = [900,100]
-        poss["000"] = [50,-50]
-        poss["001"] = [150,-50]
-        poss["010"] = [350,-50]
-        poss["011"] = [450,-50]
-        poss["100"] = [550,-50]
-        poss["101"] = [650,-50]
-        poss["110"] = [850,-50]
-        poss["111"] = [950,-50]
+        poss["000"] = [30,-50]
+        poss["001"] = [170,-50]
+        poss["010"] = [330,-50]
+        poss["011"] = [470,-50]
+        poss["100"] = [530,-50]
+        poss["101"] = [670,-50]
+        poss["110"] = [830,-50]
+        poss["111"] = [970,-50]
         label = {}
         label[(1,2)] = 0
         label[(2,4)] = 0
@@ -962,31 +997,31 @@ elif algo=="LSH":
         for i in range(len(outlst)):
             if (i==0):
                 for j in range(len(outlst[i])):
-                    poss[str(outlst[i][j])] = [50,-60-(50*(j+1))]
+                    poss[str(outlst[i][j])] = [30,-60-(50*(j+1))]
             elif (i==1):
                 for j in range(len(outlst[i])):
                     # st.write(outlst[i][0])
-                    poss[str(outlst[i][j])] = [150,-60-(50*(j+1))]
+                    poss[str(outlst[i][j])] = [170,-60-(50*(j+1))]
             elif (i==2):
                 for j in range(len(outlst[i])):
                     # st.write(outlst[i][0])
-                    poss[str(outlst[i][j])] = [350,-60-(50*(j+1))]
+                    poss[str(outlst[i][j])] = [330,-60-(50*(j+1))]
             elif (i==3):
                 for j in range(len(outlst[i])):
                     # st.write(outlst[i][0])
-                    poss[str(outlst[i][j])] = [450,-60-(50*(j+1))]
+                    poss[str(outlst[i][j])] = [470,-60-(50*(j+1))]
             elif (i==4):
                 for j in range(len(outlst[i])):
-                    poss[str(outlst[i][j])] = [550,-60-(50*(j+1))]
+                    poss[str(outlst[i][j])] = [530,-60-(50*(j+1))]
             elif (i==5):
                 for j in range(len(outlst[i])):
-                    poss[str(outlst[i][j])] = [650,-60-(50*(j+1))]
+                    poss[str(outlst[i][j])] = [670,-60-(50*(j+1))]
             elif (i==6):
                 for j in range(len(outlst[i])):
-                    poss[str(outlst[i][j])] = [850,-60-(50*(j+1))] 
+                    poss[str(outlst[i][j])] = [830,-60-(50*(j+1))] 
             elif (i==7):
                 for j in range(len(outlst[i])):
-                    poss[str(outlst[i][j])] = [950,-60-(50*(j+1))] 
+                    poss[str(outlst[i][j])] = [970,-60-(50*(j+1))] 
 
         for j in range(0,len(st.session_state.input_num)):
             # st.write(str(st.session_state.input_num[j]))
